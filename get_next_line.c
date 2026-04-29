@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: damagda <damagda@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: damagda <<marvin@42.fr>>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/08 00:00:00 by damagda           #+#    #+#             */
-/*   Updated: 2026/04/08 00:00:00 by damagda          ###   ########.fr       */
+/*   Updated: 2026/04/29 16:39:47 by damagda          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,15 @@ static char	*update_stash(char *stash)
 static char	*read_and_stash(int fd, char *stash)
 {
 	char	*buf;
+	char	*tmp;
 	ssize_t	bytes;
 
 	buf = malloc(BUFFER_SIZE + 1);
 	if (!buf)
+	{
+		free(stash);
 		return (NULL);
+	}
 	bytes = 1;
 	while (!ft_strchr_gnl(stash, '\n') && bytes > 0)
 	{
@@ -66,7 +70,13 @@ static char	*read_and_stash(int fd, char *stash)
 			return (NULL);
 		}
 		buf[bytes] = '\0';
-		stash = ft_strjoin_gnl(stash, buf);
+		tmp = ft_strjoin_gnl(stash, buf);
+		if (!tmp)
+		{
+			free(buf);
+			return (NULL);
+		}
+		stash = tmp;
 	}
 	free(buf);
 	return (stash);
